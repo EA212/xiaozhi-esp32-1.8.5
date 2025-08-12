@@ -579,7 +579,7 @@ void Application::MainEventLoop() {
     }
 }
 
-void Application::OnWakeWordDetected() {
+void Application::OnWakeWordDetected() {     //唤醒工作
     if (!protocol_) {
         return;
     }
@@ -607,8 +607,19 @@ void Application::OnWakeWordDetected() {
         SetListeningMode(aec_mode_ == kAecOff ? kListeningModeAutoStop : kListeningModeRealtime);
 #else
         SetListeningMode(aec_mode_ == kAecOff ? kListeningModeAutoStop : kListeningModeRealtime);
-        // Play the pop up sound to indicate the wake word is detected
-        audio_service_.PlaySound(Lang::Sounds::P3_POPUP);
+        // 播放随机的popup1到popup6声音
+        // 生成1-6的随机数（使用ESP32硬件随机数）
+        int rand_num = (esp_random() % 6) + 1;  // 结果为1-6
+        
+        // 根据随机数选择对应的声音
+        switch(rand_num) {
+            case 1: audio_service_.PlaySound(Lang::Sounds::P3_POPUP1); break;
+            case 2: audio_service_.PlaySound(Lang::Sounds::P3_POPUP2); break;
+            case 3: audio_service_.PlaySound(Lang::Sounds::P3_POPUP3); break;
+            case 4: audio_service_.PlaySound(Lang::Sounds::P3_POPUP4); break;
+            case 5: audio_service_.PlaySound(Lang::Sounds::P3_POPUP5); break;
+            case 6: audio_service_.PlaySound(Lang::Sounds::P3_POPUP6); break;
+        }
 #endif
     } else if (device_state_ == kDeviceStateSpeaking) {
         AbortSpeaking(kAbortReasonWakeWordDetected);
@@ -616,6 +627,7 @@ void Application::OnWakeWordDetected() {
         SetDeviceState(kDeviceStateIdle);
     }
 }
+
 
 void Application::AbortSpeaking(AbortReason reason) {
     ESP_LOGI(TAG, "Abort speaking");
