@@ -35,9 +35,9 @@ private:
 
     void InitializePowerSaveTimer() {
 #if CONFIG_USE_ESP_WAKE_WORD
-        power_save_timer_ = new PowerSaveTimer(160, 300);
+        power_save_timer_ = new PowerSaveTimer(160, 420);
 #else
-        power_save_timer_ = new PowerSaveTimer(160, 60);
+        power_save_timer_ = new PowerSaveTimer(160, 420);
 #endif
         power_save_timer_->OnEnterSleepMode([this]() {
             GetDisplay()->SetPowerSaveMode(true);
